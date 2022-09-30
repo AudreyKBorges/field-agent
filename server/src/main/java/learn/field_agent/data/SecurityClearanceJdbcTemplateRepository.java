@@ -3,7 +3,13 @@ package learn.field_agent.data;
 import learn.field_agent.data.mappers.SecurityClearanceMapper;
 import learn.field_agent.models.SecurityClearance;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.util.Objects;
 
 @Repository
 public class SecurityClearanceJdbcTemplateRepository implements SecurityClearanceRepository {
@@ -24,5 +30,53 @@ public class SecurityClearanceJdbcTemplateRepository implements SecurityClearanc
         return jdbcTemplate.query(sql, new SecurityClearanceMapper(), securityClearanceId)
                 .stream()
                 .findFirst().orElse(null);
+    }
+
+    @Override
+    public SecurityClearance findAll() {
+        final String sql = "select security_clearance_id, `name` "
+                + "from security_clearance " +
+                "order by `name``;";
+        return jdbcTemplate.query(sql, new SecurityClearanceMapper())
+                .stream()
+                .findFirst().orElse(null);
+    }
+
+    @Override
+    public SecurityClearance add(SecurityClearance securityClearance) {
+        final String sql = "insert into security_clearance (security_clearance_id, `name`) " +
+                "values (?, ?);";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        int rowsAffected = jdbcTemplate.update(connection -> {
+            PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            statement.setInt(1, securityClearance.getSecurityClearanceId());
+            statement.setString(2, securityClearance.getName());
+            return statement;
+        }, keyHolder);
+
+        if (rowsAffected == 0) {
+            return null;
+        }
+
+        securityClearance.setSecurityClearanceId(Objects.requireNonNull(keyHolder.getKey()).intValue());
+
+        return securityClearance;
+    }
+
+    @Override
+    public boolean update(SecurityClearance securityClearance) {
+        final String sql = "update security_clearance " +
+                "`name` = ;";
+
+        int rowsUpdated = jdbcTemplate.update(sql,
+                securityClearance.getName());
+
+        return rowsUpdated > 0;
+    }
+
+    public boolean deleteById(int securityClearanceId) {
+        final String sql = "delete from security_clearance where id = ?;";
+        return jdbcTemplate.update(sql, securityClearanceId) > 0;
     }
 }
