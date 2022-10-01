@@ -2,16 +2,20 @@ package learn.field_agent.data;
 
 import learn.field_agent.data.mappers.SecurityClearanceMapper;
 import learn.field_agent.models.SecurityClearance;
+import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Objects;
 
 @Repository
+@Profile("jdcb-template")
 public class SecurityClearanceJdbcTemplateRepository implements SecurityClearanceRepository {
 
     private final JdbcTemplate jdbcTemplate;
@@ -21,31 +25,27 @@ public class SecurityClearanceJdbcTemplateRepository implements SecurityClearanc
     }
 
     @Override
+    @Transactional
     public SecurityClearance findById(int securityClearanceId) {
+        final String sql = "select security_clearance_id, `name` " +
+                "from security_clearance " +
+                "where security_clearance_id = ?;";
 
-        final String sql = "select security_clearance_id, name security_clearance_name "
-                + "from security_clearance "
-                + "where security_clearance_id = ?;";
-
-        return jdbcTemplate.query(sql, new SecurityClearanceMapper(), securityClearanceId)
-                .stream()
-                .findFirst().orElse(null);
+        return jdbcTemplate.query(sql, new SecurityClearanceMapper(), securityClearanceId).stream().findFirst().orElse(null);
     }
 
     @Override
-    public SecurityClearance findAll() {
-        final String sql = "select security_clearance_id, `name` "
-                + "from security_clearance " +
-                "order by `name``;";
-        return jdbcTemplate.query(sql, new SecurityClearanceMapper())
-                .stream()
-                .findFirst().orElse(null);
+    public List<SecurityClearance> findAll() {
+        final String sql = "select security_clearance_id, `name` " +
+                "from security_clearance; ";
+
+        return jdbcTemplate.query(sql, new SecurityClearanceMapper());
+
     }
 
     @Override
     public SecurityClearance add(SecurityClearance securityClearance) {
-        final String sql = "insert into security_clearance (security_clearance_id, `name`) " +
-                "values (?, ?);";
+        final String sql = "insert into security_clearance (name) values (?);";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int rowsAffected = jdbcTemplate.update(connection -> {
@@ -55,7 +55,7 @@ public class SecurityClearanceJdbcTemplateRepository implements SecurityClearanc
             return statement;
         }, keyHolder);
 
-        if (rowsAffected == 0) {
+        if (rowsAffected <= 0) {
             return null;
         }
 
@@ -66,13 +66,13 @@ public class SecurityClearanceJdbcTemplateRepository implements SecurityClearanc
 
     @Override
     public boolean update(SecurityClearance securityClearance) {
-        final String sql = "update security_clearance " +
-                "`name` = ;";
+        final String sql = "update security_clearance set " +
+                "name = ?" +
+                "where security_clearance_id = ?;";
 
-        int rowsUpdated = jdbcTemplate.update(sql,
-                securityClearance.getName());
-
-        return rowsUpdated > 0;
+        return  jdbcTemplate.update(sql,
+                securityClearance.getName(),
+                securityClearance.getSecurityClearanceId()) > 0;
     }
 
     public boolean deleteById(int securityClearanceId) {
