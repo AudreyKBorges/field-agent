@@ -1,8 +1,13 @@
 package learn.field_agent.controllers;
 
+import learn.field_agent.domain.AliasService;
+import learn.field_agent.domain.Result;
+import learn.field_agent.models.Alias;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:3000"})
@@ -35,7 +40,7 @@ public class AliasController {
     }
 
     @PutMapping("/{aliasId}")
-    public ResponseEntity<Object> update(@PathVariable int agentId, @RequestBody Alias alias) {
+    public ResponseEntity<Object> update(@PathVariable int aliasId, @RequestBody Alias alias) {
         if (aliasId != alias.getAliasId()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }

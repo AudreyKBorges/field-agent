@@ -33,7 +33,7 @@ class SecurityClearanceJdbcTemplateRepositoryTest {
         actual = repository.findById(2);
         assertEquals(topSecret, actual);
 
-        actual = repository.findById(3);
+        actual = repository.findById(5);
         assertEquals(null, actual);
     }
 
@@ -54,15 +54,15 @@ class SecurityClearanceJdbcTemplateRepositoryTest {
     @Test
     void shouldUpdate() {
         SecurityClearance securityClearance = new SecurityClearance();
-        securityClearance.setSecurityClearanceId(5);
-        securityClearance.setName("Cinco");
+        securityClearance.setSecurityClearanceId(2);
+        securityClearance.setName("Super Duper Secret");
 
         assertTrue(repository.update(securityClearance));
-        assertEquals(securityClearance, repository.findById(5));
+        assertEquals(securityClearance, repository.findById(2));
     }
 
     @Test
     void shouldDelete() {
-        assertTrue(repository.deleteById(5));
+        assertTrue(repository.deleteById(3));
     }
 }

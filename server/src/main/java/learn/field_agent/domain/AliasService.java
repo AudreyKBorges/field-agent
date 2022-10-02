@@ -1,6 +1,11 @@
 package learn.field_agent.domain;
 
+import learn.field_agent.data.AliasRepository;
+import learn.field_agent.models.Alias;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Objects;
 
 @Service
 public class AliasService {
@@ -69,8 +74,10 @@ public class AliasService {
             result.addMessage("Name is required", ResultType.INVALID);
         }
 
-        if (Validations.isNullOrBlank(alias.getAgentId())) {
-            result.addMessage("AgentId is required", ResultType.INVALID);
+        for(Alias a : findAll()) {
+            if(Objects.equals(alias.getName(), a.getName())) {
+                result.addMessage("Persona is required", result.getType());
+            }
         }
 
         return result;
