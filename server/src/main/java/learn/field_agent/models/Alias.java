@@ -10,6 +10,17 @@ public class Alias {
     private String persona;
     private int agentId;
 
+    public Alias(int aliasId, String name, String persona, int agentId) {
+        this.aliasId = aliasId;
+        this.name = name;
+        this.persona = persona;
+        this.agentId = agentId;
+    }
+
+    public Alias() {
+
+    }
+
     private List<Alias> aliases = new ArrayList<>();
 
     public int getAliasId() {

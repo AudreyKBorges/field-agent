@@ -55,7 +55,7 @@ class SecurityClearanceServiceTest {
         SecurityClearance securityClearance = new SecurityClearance();
         securityClearance.setName(null);
 
-        Result result = service.add(securityClearance);
+        Result<SecurityClearance> result = service.add(securityClearance);
 
         assertFalse(result.isSuccess());
         assertEquals(1, result.getMessages().size());
@@ -78,7 +78,7 @@ class SecurityClearanceServiceTest {
     void shouldAdd() {
         SecurityClearance securityClearance = makeSecurityClearance();
         SecurityClearance mockOut = makeSecurityClearance();
-        mockOut.setSecurityClearanceId(1);
+        mockOut.setSecurityClearanceId(5);
 
         when(repository.add(securityClearance)).thenReturn(mockOut);
 
