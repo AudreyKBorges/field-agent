@@ -3,6 +3,7 @@ package learn.field_agent.domain;
 import learn.field_agent.data.SecurityClearanceRepository;
 import learn.field_agent.models.SecurityClearance;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -57,6 +58,7 @@ public class SecurityClearanceService {
         return result;
     }
 
+    @Transactional
     public boolean deleteById(int securityClearanceId) {
         Result<SecurityClearance> result = new Result<>();
         if (!repository.deleteById(securityClearanceId)) {

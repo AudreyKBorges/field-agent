@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
-import java.util.Objects;
 
 @Repository
 @Profile("jdcb-template")
@@ -27,16 +26,19 @@ public class SecurityClearanceJdbcTemplateRepository implements SecurityClearanc
     @Override
     @Transactional
     public SecurityClearance findById(int securityClearanceId) {
-        final String sql = "select security_clearance_id, `name` " +
-                "from security_clearance " +
-                "where security_clearance_id = ?;";
 
-        return jdbcTemplate.query(sql, new SecurityClearanceMapper(), securityClearanceId).stream().findFirst().orElse(null);
+        final String sql = "select security_clearance_id, name security_clearance_name "
+                + "from security_clearance "
+                + "where security_clearance_id = ?;";
+
+        return jdbcTemplate.query(sql, new SecurityClearanceMapper(), securityClearanceId)
+                .stream()
+                .findFirst().orElse(null);
     }
 
     @Override
     public List<SecurityClearance> findAll() {
-        final String sql = "select security_clearance_id, `name` " +
+        final String sql = "select security_clearance_id, name security_clearance_name " +
                 "from security_clearance; ";
 
         return jdbcTemplate.query(sql, new SecurityClearanceMapper());
@@ -51,7 +53,7 @@ public class SecurityClearanceJdbcTemplateRepository implements SecurityClearanc
         int rowsAffected = jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, securityClearance.getSecurityClearanceId());
-            statement.setString(2, securityClearance.getName());
+            statement.setString(1, securityClearance.getName());
             return statement;
         }, keyHolder);
 
@@ -59,7 +61,7 @@ public class SecurityClearanceJdbcTemplateRepository implements SecurityClearanc
             return null;
         }
 
-        securityClearance.setSecurityClearanceId(Objects.requireNonNull(keyHolder.getKey()).intValue());
+        securityClearance.setSecurityClearanceId(keyHolder.getKey().intValue());
 
         return securityClearance;
     }
@@ -75,8 +77,9 @@ public class SecurityClearanceJdbcTemplateRepository implements SecurityClearanc
                 securityClearance.getSecurityClearanceId()) > 0;
     }
 
+    @Override
     public boolean deleteById(int securityClearanceId) {
-        final String sql = "delete from security_clearance where id = ?;";
+        final String sql = "delete from security_clearance where security_clearance_id = ?;";
         return jdbcTemplate.update(sql, securityClearanceId) > 0;
     }
 }
