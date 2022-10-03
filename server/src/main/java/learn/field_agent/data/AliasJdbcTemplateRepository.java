@@ -1,8 +1,8 @@
 package learn.field_agent.data;
 
-import learn.field_agent.data.mappers.AliasMapper;
 import learn.field_agent.models.Alias;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -20,13 +20,23 @@ public class AliasJdbcTemplateRepository implements AliasRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    private final RowMapper<Alias> mapper = (resultSet, rowIndex) ->{
+        Alias alias = new Alias();
+        alias.setAliasId(resultSet.getInt("alias_id"));
+        alias.setName(resultSet.getString("name"));
+        alias.setPersona(resultSet.getString("persona"));
+        alias.setAgentId(resultSet.getInt("agent_id"));
+
+        return alias;
+    };
+
     @Override
     public List<Alias> findByName(String name) {
-        final String sql = "select alias_id, name alias_name, persona, agent_id " +
-                "from aliases " +
-                "where name = ?";
+        final String sql = "select alias_id, name alias_name, persona, agent_id "
+                + "from alias "
+                + "where name alias_name = ?;";
 
-        return jdbcTemplate.query(sql, new AliasMapper(), name);
+        return jdbcTemplate.query(sql, mapper, name);
     }
 
     @Override

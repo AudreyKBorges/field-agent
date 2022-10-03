@@ -2,9 +2,6 @@ package learn.field_agent.data;
 
 import learn.field_agent.models.Alias;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 public interface AliasRepository {

@@ -21,13 +21,8 @@ public class AliasController {
     }
 
     @GetMapping
-    public List<Alias> findAll() {
-        return service.findAll();
-    }
-
-    @GetMapping("/{agentId}")
-    public List<Alias> findById(@PathVariable int agentId) {
-        return service.Aliases(agentId);
+    public List<Alias> findByName(String name) {
+        return service.findByName(name);
     }
 
     @PostMapping

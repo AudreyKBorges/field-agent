@@ -25,13 +25,9 @@ class AliasJdbcTemplateRepositoryTest {
     }
 
     @Test
-    void findAllAgentAliases() {
-        List<Alias> agentExists = repository.Aliases(1);
-        assertTrue(agentExists.size() >= 1 && agentExists.size() <= NEXT_ID);
-
-        List<Alias> noAlias = repository.Aliases(4);
-        assertEquals(0, noAlias.size());
-
+    void findAliasByName() {
+        List<Alias> result = repository.findByName("Agent X");
+        assertNotNull(result);
     }
 
     @Test
@@ -50,9 +46,8 @@ class AliasJdbcTemplateRepositoryTest {
     @Test
     void shouldUpdate() {
         Alias aliasOne = firstAlias();
-        aliasOne.setAliasId(1);
         assertTrue(repository.update(aliasOne));
-        aliasOne.setAliasId(999);
+        aliasOne.setAliasId(1);
         assertFalse(repository.update(aliasOne));
     }
 
@@ -64,17 +59,17 @@ class AliasJdbcTemplateRepositoryTest {
 
     private Alias firstAlias() {
         Alias alias = new Alias();
-        alias.setAgentId(1);
-        alias.setPersona("Top Secret Agent");
         alias.setName("Foxy Cleopatra");
+        alias.setPersona("Top Secret Agent");
+        alias.setAgentId(1);
         return alias;
     }
 
     private Alias secondAlias() {
         Alias alias = new Alias();
-        alias.setAgentId(1);
-        alias.setPersona(null);
         alias.setName("Senor Superman");
+        alias.setPersona(null);
+        alias.setAgentId(2);
         return alias;
     }
 }
