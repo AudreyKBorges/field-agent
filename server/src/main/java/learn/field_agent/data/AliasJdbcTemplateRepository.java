@@ -86,6 +86,7 @@ public class AliasJdbcTemplateRepository implements AliasRepository {
                 + "agent_id = ?;";
 
         return jdbcTemplate.update(sql,
+                alias.getAliasId(),
                 alias.getName(),
                 alias.getPersona(),
                 alias.getAgentId()) > 0;
@@ -100,10 +101,9 @@ public class AliasJdbcTemplateRepository implements AliasRepository {
 
     private void addAliases(Alias alias) {
 
-        final String sql = "select al.alias_id, al.name, al.persona, al.agency_id "
-                + "from alias as al "
-                + "inner join alias al on al.agency_id = aa.agency_id "
-                + "where aa.agent_id = ?;";
+        final String sql = "select alias_id, name, persona, agent_id "
+                + "from alias "
+                + "where alias_id = ?;";
 
         var aliases = jdbcTemplate.query(sql, new AliasMapper(), alias.getAliasId());
         alias.setAliases(aliases);

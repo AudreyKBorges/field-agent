@@ -2,6 +2,7 @@ package learn.field_agent.domain;
 
 import learn.field_agent.data.AliasRepository;
 import learn.field_agent.data.LocationRepository;
+import learn.field_agent.models.Agency;
 import learn.field_agent.models.Alias;
 import learn.field_agent.models.Location;
 import org.junit.jupiter.api.Test;
@@ -36,9 +37,8 @@ class AliasServiceTest {
 
     @Test
     void shouldAdd() {
-        Alias alias = makeAlias();
-        Alias mockOut = makeAlias();
-        mockOut.setAgentId(7);
+        Alias alias = new Alias(7, "Test", "Test", 7);
+        Alias mockOut = new Alias(8, "TEST", "Long Name Test", 8);
 
         when(repository.add(alias)).thenReturn(mockOut);
 

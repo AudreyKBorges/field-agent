@@ -88,21 +88,16 @@ class SecurityClearanceServiceTest {
     }
 
     @Test
-    void shouldNotUpdateWhenInvalid() {
-        SecurityClearance securityClearance = makeSecurityClearance();
-        Result<SecurityClearance> actual = service.update(securityClearance);
-        assertEquals(ResultType.INVALID, actual.getType());
-
-        securityClearance = makeSecurityClearance();
-        securityClearance.setSecurityClearanceId(1);
+    void shouldNotUpdateNonExistentSecurityClearance() {
+        SecurityClearance securityClearance = new SecurityClearance();
+        securityClearance.setSecurityClearanceId(1000);
         securityClearance.setName("");
-        actual = service.update(securityClearance);
-        assertEquals(ResultType.INVALID, actual.getType());
 
-        securityClearance = makeSecurityClearance();
-        securityClearance.setName("");
-        actual = service.update(securityClearance);
-        assertEquals(ResultType.INVALID, actual.getType());
+        Result result = service.update(securityClearance);
+
+        assertFalse(result.isSuccess());
+        assertEquals(1, result.getMessages().size());
+        assertTrue(result.getMessages().contains("was not found"));
     }
 
     @Test

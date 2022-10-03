@@ -37,7 +37,7 @@ class AliasJdbcTemplateRepositoryTest {
     }
 
     @Test
-    void shouldCreate() {
+    void shouldAdd() {
         Alias alias = new Alias();
         alias.setAliasId(7);
         alias.setName("Agent 13");
