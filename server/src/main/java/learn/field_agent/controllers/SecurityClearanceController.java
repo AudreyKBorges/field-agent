@@ -1,6 +1,7 @@
 package learn.field_agent.controllers;
 
 import learn.field_agent.domain.Result;
+import learn.field_agent.domain.ResultType;
 import learn.field_agent.domain.SecurityClearanceService;
 import learn.field_agent.models.SecurityClearance;
 import org.springframework.http.HttpStatus;
@@ -31,26 +32,28 @@ public class SecurityClearanceController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> add(@RequestBody SecurityClearance securityClearance) {
-        Result<SecurityClearance> result = service.add(securityClearance);
-        if (result.isSuccess()) {
-            return new ResponseEntity<>(result.getPayload(), HttpStatus.CREATED);
+    public ResponseEntity<?> add(@RequestBody SecurityClearance securityClearance){
+        Result result = service.add(securityClearance);
+        if(!result.isSuccess()){
+            return new ResponseEntity<>(result.getMessages(), HttpStatus.BAD_REQUEST);
         }
-        return ErrorResponse.build(result);
+        return new ResponseEntity<>(result.getPayload(), HttpStatus.CREATED);
     }
 
     @PutMapping("/{securityClearanceId}")
-    public ResponseEntity<Object> update(@PathVariable int securityClearanceId, @RequestBody SecurityClearance securityClearance) {
+    public ResponseEntity<?> update(@PathVariable int securityClearanceId, @RequestBody SecurityClearance securityClearance) {
         if (securityClearanceId != securityClearance.getSecurityClearanceId()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-
-        Result<SecurityClearance> result = service.update(securityClearance);
-        if (result.isSuccess()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        Result result = service.update(securityClearance);
+        if(!result.isSuccess()){
+            if(result.getType() == ResultType.NOT_FOUND){
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }else{
+                return new ResponseEntity<>(result.getMessages(), HttpStatus.BAD_REQUEST);
+            }
         }
-
-        return ErrorResponse.build(result);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/{securityClearanceId}")
@@ -60,5 +63,4 @@ public class SecurityClearanceController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
 }

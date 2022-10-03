@@ -116,6 +116,14 @@ class SecurityClearanceServiceTest {
         assertEquals(ResultType.SUCCESS, actual.getType());
     }
 
+    @Test
+    void shouldDelete() {
+        when(repository.deleteById(1)).thenReturn(true);
+        boolean result = service.deleteById(1);
+
+        assertTrue(result);
+    }
+
     SecurityClearance makeSecurityClearance() {
         SecurityClearance securityClearance = new SecurityClearance();
         securityClearance.setSecurityClearanceId(5);
