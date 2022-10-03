@@ -14,10 +14,6 @@ public class SecurityClearanceService {
         this.repository = repository;
     }
 
-    public void setKnownGoodState(){
-        repository.setKnownGoodState();
-    }
-
     public List<SecurityClearance> findAll() {
         return repository.findAll();
     }

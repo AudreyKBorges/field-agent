@@ -14,16 +14,8 @@ public class AliasService {
     public AliasService(AliasRepository repository) {
         this.repository = repository;
     }
-
-    public void setKnownGoodState(){
-        repository.setKnownGoodState();
-    }
-
-    public List<Alias> Aliases(int agentId){
-        return repository.Aliases(agentId);
-    }
-    public List<Alias> findAll() {
-        return repository.findAll();
+    public List<Alias> findByName(String name) {
+        return repository.findByName(name);
     }
 
 
@@ -77,7 +69,7 @@ public class AliasService {
             result.addMessage("Name is required", ResultType.INVALID);
         }
 
-        List<Alias> aliases = repository.findAll();
+        List<Alias> aliases = repository.findByName(alias.getName());
         for (Alias a : aliases) {
             if (a.getName().equalsIgnoreCase(alias.getName())) {
                 if (Validations.isNullOrBlank(alias.getPersona())) {

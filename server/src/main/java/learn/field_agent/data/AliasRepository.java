@@ -9,11 +9,7 @@ import java.util.List;
 
 public interface AliasRepository {
 
-    Alias mapRow(ResultSet resultSet, int i) throws SQLException;
-
-    List<Alias> Aliases(int agentId);
-
-    List<Alias> findAll();
+    List<Alias> findByName(String name);
 
     Alias add(Alias alias);
 
@@ -21,6 +17,4 @@ public interface AliasRepository {
 
     @Transactional
     boolean deleteById(int aliasId);
-
-    void setKnownGoodState();
 }

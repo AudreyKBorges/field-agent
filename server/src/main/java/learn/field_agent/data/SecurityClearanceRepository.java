@@ -14,6 +14,4 @@ public interface SecurityClearanceRepository {
     boolean update(SecurityClearance securityClearance);
 
     boolean deleteById(int securityClearanceId);
-
-    void setKnownGoodState();
 }

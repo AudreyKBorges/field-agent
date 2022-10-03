@@ -20,11 +20,6 @@ public class AliasController {
         this.service = service;
     }
 
-    @GetMapping("/setKnownGoodState")
-    public void callSetKnownGoodState() {
-        service.setKnownGoodState();
-    }
-
     @GetMapping
     public List<Alias> findAll() {
         return service.findAll();

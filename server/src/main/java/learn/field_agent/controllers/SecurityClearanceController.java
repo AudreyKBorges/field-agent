@@ -20,11 +20,6 @@ public class SecurityClearanceController {
         this.service = service;
     }
 
-    @GetMapping("/setKnownGoodState")
-    public void callSetKnownGoodState() {
-        service.setKnownGoodState();
-    }
-
     @GetMapping
     public List<SecurityClearance> findAll() {
         return service.findAll();

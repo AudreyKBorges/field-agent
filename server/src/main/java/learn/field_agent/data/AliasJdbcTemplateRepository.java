@@ -1,8 +1,6 @@
 package learn.field_agent.data;
 
-import learn.field_agent.data.mappers.AgentMapper;
 import learn.field_agent.data.mappers.AliasMapper;
-import learn.field_agent.models.Agent;
 import learn.field_agent.models.Alias;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -11,10 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -26,33 +21,12 @@ public class AliasJdbcTemplateRepository implements AliasRepository {
     }
 
     @Override
-    public Alias mapRow(ResultSet resultSet, int i) throws SQLException {
-        return null;
-    }
+    public List<Alias> findByName(String name) {
+        final String sql = "select alias_id, name alias_name, persona, agent_id " +
+                "from aliases " +
+                "where name = ?";
 
-    public void setKnownGoodState(){
-        jdbcTemplate.update("call set_known_good_state();");
-    }
-
-    @Override
-    public List<Alias> Aliases(int agentId) {
-        List<Alias> allAliases = new ArrayList<>();
-        final String sql = "select * from agent where agent_id = ?;";
-        Agent result = jdbcTemplate.query(sql, new AgentMapper(), agentId)
-                .stream()
-                .findFirst().orElse(null);
-
-        if(result != null){
-            allAliases = addAliases(result);
-        }
-
-        return allAliases;
-    }
-
-    @Override
-    public List<Alias> findAll() {
-        final String sql = "select alias_id, name alias_name, persona, agent_id from alias limit 1000;";
-        return jdbcTemplate.query(sql, new AliasMapper());
+        return jdbcTemplate.query(sql, new AliasMapper(), name);
     }
 
     @Override
@@ -96,15 +70,5 @@ public class AliasJdbcTemplateRepository implements AliasRepository {
     @Transactional
     public boolean deleteById(int aliasId) {
         return jdbcTemplate.update("delete from alias where alias_id = ?", aliasId) > 0;
-    }
-
-    private List<Alias> addAliases(Agent agent){
-        final String sql = "select alias_id, name alias_name, persona, agent_id from alias where agent_id = ?;";
-
-        var aliases = jdbcTemplate.query(sql, new AliasMapper(), agent.getAgentId());
-        agent.setAliases(aliases);
-
-        return aliases;
-
     }
 }

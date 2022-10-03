@@ -24,10 +24,6 @@ public class SecurityClearanceJdbcTemplateRepository implements SecurityClearanc
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void setKnownGoodState(){
-        jdbcTemplate.update("call set_known_good_state();");
-    }
-
     @Override
     public SecurityClearance findById(int securityClearanceId) {
 
