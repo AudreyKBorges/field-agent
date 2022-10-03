@@ -3,7 +3,6 @@ package learn.field_agent.domain;
 import learn.field_agent.data.SecurityClearanceRepository;
 import learn.field_agent.models.SecurityClearance;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,6 +12,10 @@ public class SecurityClearanceService {
 
     public SecurityClearanceService(SecurityClearanceRepository repository) {
         this.repository = repository;
+    }
+
+    public void setKnownGoodState(){
+        repository.setKnownGoodState();
     }
 
     public List<SecurityClearance> findAll() {
@@ -58,19 +61,14 @@ public class SecurityClearanceService {
         return result;
     }
 
-    @Transactional
-    public boolean deleteById(int securityClearanceId) {
-        Result<SecurityClearance> result = new Result<>();
-        if (!repository.deleteById(securityClearanceId)) {
-            result.addMessage("securityClearanceId was not found.", ResultType.NOT_FOUND);
-        }
-        return result.isSuccess();
+    public boolean deleteById(int agentId) {
+        return repository.deleteById(agentId);
     }
 
     private Result<SecurityClearance> validate(SecurityClearance securityClearance) {
         Result<SecurityClearance> result = new Result<>();
         if (securityClearance == null) {
-            result.addMessage("security clearance cannot be null", ResultType.INVALID);
+            result.addMessage("Security clearance cannot be null", ResultType.INVALID);
             return result;
         }
 
@@ -78,11 +76,11 @@ public class SecurityClearanceService {
             result.addMessage("name is required", ResultType.INVALID);
         }
 
-        if (result.isSuccess()) {
-            List<SecurityClearance> existingSecurityClearance = repository.findAll();
-            for (SecurityClearance s : existingSecurityClearance) {
-                if (s.getSecurityClearanceId() != securityClearance.getSecurityClearanceId() && s.getName().equalsIgnoreCase(securityClearance.getName()))
-                    result.addMessage("securityClearance name must be unique", ResultType.INVALID);
+        List<SecurityClearance> clearances = repository.findAll();
+        for (SecurityClearance s : clearances) {
+            if (s.getName().equalsIgnoreCase(securityClearance.getName())) {
+                result.addMessage("duplicates are not allowed", ResultType.INVALID);
+                break;
             }
         }
         return result;

@@ -9,9 +9,11 @@ public interface SecurityClearanceRepository {
 
     List<SecurityClearance> findAll();
 
-    SecurityClearance add(SecurityClearance securityClearance);
+    SecurityClearance add (SecurityClearance securityClearance);
 
     boolean update(SecurityClearance securityClearance);
 
     boolean deleteById(int securityClearanceId);
+
+    void setKnownGoodState();
 }

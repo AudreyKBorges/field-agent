@@ -6,10 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class AliasJdbcTemplateRepositoryTest {
+    private final int NEXT_ID = 7;
     @Autowired
     AliasJdbcTemplateRepository repository;
 
@@ -22,49 +25,56 @@ class AliasJdbcTemplateRepositoryTest {
     }
 
     @Test
-    void shouldFindById() {
-        Alias jamesBond = new Alias(1, "James Bond", "Secret Agent", 1);
-        Alias agentX = new Alias(2, "Agent X", "Secret Agent", 2);
+    void findAllAgentAliases() {
+        List<Alias> agentExists = repository.Aliases(1);
+        assertTrue(agentExists.size() >= 1 && agentExists.size() <= NEXT_ID);
 
-        Alias actual = repository.findById(1);
-        assertEquals(jamesBond, actual);
+        List<Alias> noAlias = repository.Aliases(4);
+        assertEquals(0, noAlias.size());
 
-        actual = repository.findById(2);
-        assertEquals(agentX, actual);
-
-        actual = repository.findById(6);
-        assertEquals(null, actual);
     }
 
     @Test
     void shouldAdd() {
-        Alias alias = new Alias();
-        alias.setAliasId(7);
-        alias.setName("Agent 13");
-        alias.setPersona("Special Agent");
-        alias.setAgentId(7);
+        Alias alias1 = firstAlias();
+        Alias actual = repository.add(alias1);
+        assertNotNull(actual);
+        assertEquals(NEXT_ID, actual.getAliasId());
 
-        Alias result = repository.add(alias);
-
-        assertNotNull(result);
-        assertEquals(7, result.getAliasId());
-
-        assertEquals(result, repository.findById(5));
+        Alias alias2 = secondAlias();
+        Alias actual2 = repository.add(alias2);
+        assertNotNull(actual2);
+        assertEquals(NEXT_ID + 1, actual2.getAliasId());
     }
 
     @Test
     void shouldUpdate() {
-        Alias alias = new Alias();
-        alias.setAliasId(2);
-        alias.setName("Austin Powers");
-
-        assertTrue(repository.update(alias));
-        assertEquals(alias, repository.findById(2));
+        Alias aliasOne = firstAlias();
+        aliasOne.setAliasId(1);
+        assertTrue(repository.update(aliasOne));
+        aliasOne.setAliasId(999);
+        assertFalse(repository.update(aliasOne));
     }
 
     @Test
     void shouldDelete() {
-        assertTrue(repository.deleteById(3));
+        assertTrue(repository.deleteById(2));
+        assertFalse(repository.deleteById(200));
     }
 
+    private Alias firstAlias() {
+        Alias alias = new Alias();
+        alias.setAgentId(1);
+        alias.setPersona("Top Secret Agent");
+        alias.setName("Foxy Cleopatra");
+        return alias;
+    }
+
+    private Alias secondAlias() {
+        Alias alias = new Alias();
+        alias.setAgentId(1);
+        alias.setPersona(null);
+        alias.setName("Senor Superman");
+        return alias;
+    }
 }

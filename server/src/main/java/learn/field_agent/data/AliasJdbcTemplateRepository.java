@@ -1,6 +1,8 @@
 package learn.field_agent.data;
 
+import learn.field_agent.data.mappers.AgentMapper;
 import learn.field_agent.data.mappers.AliasMapper;
+import learn.field_agent.models.Agent;
 import learn.field_agent.models.Alias;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -12,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -27,44 +30,41 @@ public class AliasJdbcTemplateRepository implements AliasRepository {
         return null;
     }
 
+    public void setKnownGoodState(){
+        jdbcTemplate.update("call set_known_good_state();");
+    }
+
+    @Override
+    public List<Alias> Aliases(int agentId) {
+        List<Alias> allAliases = new ArrayList<>();
+        final String sql = "select * from agent where agent_id = ?;";
+        Agent result = jdbcTemplate.query(sql, new AgentMapper(), agentId)
+                .stream()
+                .findFirst().orElse(null);
+
+        if(result != null){
+            allAliases = addAliases(result);
+        }
+
+        return allAliases;
+    }
+
     @Override
     public List<Alias> findAll() {
-        final String sql = "select alias_id, name, persona, agent_id "
-                + "from alias limit 1000;";
+        final String sql = "select alias_id, name alias_name, persona, agent_id from alias limit 1000;";
         return jdbcTemplate.query(sql, new AliasMapper());
     }
 
     @Override
-    @Transactional
-    public Alias findById(int aliasId) {
-
-        final String sql = "select alias_id, name, persona, agent_id "
-                + "from alias "
-                + "where alias_id = ?;";
-
-        Alias alias = jdbcTemplate.query(sql, new AliasMapper(), aliasId).stream()
-                .findFirst().orElse(null);
-
-        if (alias != null) {
-            addAliases(alias);
-        }
-
-        return alias;
-    }
-
-    @Override
     public Alias add(Alias alias) {
-
-        final String sql = "insert into alias (alias_id, name, persona, agent_id) "
-                + " values (?,?,?,?);";
+        final String sql = "insert into alias (name, persona, agent_id) values (?, ?, ?);";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int rowsAffected = jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, alias.getAliasId());
-            ps.setString(2, alias.getName());
-            ps.setString(3, alias.getPersona());
-            ps.setInt(4, alias.getAgentId());;
+            ps.setString(1, alias.getName());
+            ps.setString(2, alias.getPersona());
+            ps.setInt(3, alias.getAgentId());
             return ps;
         }, keyHolder);
 
@@ -95,17 +95,16 @@ public class AliasJdbcTemplateRepository implements AliasRepository {
     @Override
     @Transactional
     public boolean deleteById(int aliasId) {
-        jdbcTemplate.update("delete from alias where alias_id = ?;", aliasId);
-        return jdbcTemplate.update("delete from alias where alias_id = ?;", aliasId) > 0;
+        return jdbcTemplate.update("delete from alias where alias_id = ?", aliasId) > 0;
     }
 
-    private void addAliases(Alias alias) {
+    private List<Alias> addAliases(Agent agent){
+        final String sql = "select alias_id, name alias_name, persona, agent_id from alias where agent_id = ?;";
 
-        final String sql = "select alias_id, name, persona, agent_id "
-                + "from alias "
-                + "where alias_id = ?;";
+        var aliases = jdbcTemplate.query(sql, new AliasMapper(), agent.getAgentId());
+        agent.setAliases(aliases);
 
-        var aliases = jdbcTemplate.query(sql, new AliasMapper(), alias.getAliasId());
-        alias.setAliases(aliases);
+        return aliases;
+
     }
 }

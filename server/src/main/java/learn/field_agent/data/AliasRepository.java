@@ -10,10 +10,10 @@ import java.util.List;
 public interface AliasRepository {
 
     Alias mapRow(ResultSet resultSet, int i) throws SQLException;
-    List<Alias> findAll();
 
-    @Transactional
-    Alias findById(int aliasId);
+    List<Alias> Aliases(int agentId);
+
+    List<Alias> findAll();
 
     Alias add(Alias alias);
 
@@ -21,4 +21,6 @@ public interface AliasRepository {
 
     @Transactional
     boolean deleteById(int aliasId);
+
+    void setKnownGoodState();
 }

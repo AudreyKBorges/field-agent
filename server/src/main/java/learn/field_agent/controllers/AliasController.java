@@ -20,14 +20,19 @@ public class AliasController {
         this.service = service;
     }
 
+    @GetMapping("/setKnownGoodState")
+    public void callSetKnownGoodState() {
+        service.setKnownGoodState();
+    }
+
     @GetMapping
     public List<Alias> findAll() {
         return service.findAll();
     }
 
-    @GetMapping("/{aliasId}")
-    public Alias findById(@PathVariable int aliasId) {
-        return service.findById(aliasId);
+    @GetMapping("/{agentId}")
+    public List<Alias> findById(@PathVariable int agentId) {
+        return service.Aliases(agentId);
     }
 
     @PostMapping

@@ -1,7 +1,6 @@
 package learn.field_agent.controllers;
 
 import learn.field_agent.domain.Result;
-import learn.field_agent.domain.ResultType;
 import learn.field_agent.domain.SecurityClearanceService;
 import learn.field_agent.models.SecurityClearance;
 import org.springframework.http.HttpStatus;
@@ -21,14 +20,23 @@ public class SecurityClearanceController {
         this.service = service;
     }
 
+    @GetMapping("/setKnownGoodState")
+    public void callSetKnownGoodState() {
+        service.setKnownGoodState();
+    }
+
     @GetMapping
     public List<SecurityClearance> findAll() {
         return service.findAll();
     }
 
     @GetMapping("/{securityClearanceId}")
-    public SecurityClearance findById(@PathVariable int securityClearanceId) {
-        return service.findById(securityClearanceId);
+    public ResponseEntity<SecurityClearance> findById(@PathVariable int securityClearanceId) {
+        SecurityClearance securityClearance = service.findById(securityClearanceId);
+        if (securityClearance == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(securityClearance);
     }
 
     @PostMapping
@@ -42,25 +50,33 @@ public class SecurityClearanceController {
 
     @PutMapping("/{securityClearanceId}")
     public ResponseEntity<?> update(@PathVariable int securityClearanceId, @RequestBody SecurityClearance securityClearance) {
-        if (securityClearanceId != securityClearance.getSecurityClearanceId()) {
+        if (securityClearanceId != securityClearance.getSecurityClearanceId()) { //AKA the url ID does not match the id in the body of the request
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-        Result result = service.update(securityClearance);
-        if(!result.isSuccess()){
-            if(result.getType() == ResultType.NOT_FOUND){
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }else{
-                return new ResponseEntity<>(result.getMessages(), HttpStatus.BAD_REQUEST);
-            }
+
+        Result<SecurityClearance> result = service.update(securityClearance);
+        if (result.isSuccess()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        return ErrorResponse.build(result);
     }
 
     @DeleteMapping("/{securityClearanceId}")
     public ResponseEntity<Void> deleteById(@PathVariable int securityClearanceId) {
+        SecurityClearance securityClearance = service.findById(securityClearanceId);
+        if (securityClearance == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
         if (service.deleteById(securityClearanceId)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+
+        if(!service.deleteById(securityClearanceId)){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

@@ -1,5 +1,6 @@
 package learn.field_agent.data;
 
+import learn.field_agent.data.mappers.AgencyAgentMapper;
 import learn.field_agent.data.mappers.SecurityClearanceMapper;
 import learn.field_agent.models.SecurityClearance;
 import org.springframework.context.annotation.Profile;
@@ -23,38 +24,44 @@ public class SecurityClearanceJdbcTemplateRepository implements SecurityClearanc
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public void setKnownGoodState(){
+        jdbcTemplate.update("call set_known_good_state();");
+    }
+
     @Override
-    @Transactional
     public SecurityClearance findById(int securityClearanceId) {
 
         final String sql = "select security_clearance_id, name security_clearance_name "
                 + "from security_clearance "
                 + "where security_clearance_id = ?;";
 
-        return jdbcTemplate.query(sql, new SecurityClearanceMapper(), securityClearanceId)
+        SecurityClearance result = jdbcTemplate.query(sql, new SecurityClearanceMapper(), securityClearanceId)
                 .stream()
                 .findFirst().orElse(null);
+
+        if(result != null){
+            addAgencyAgent(result);
+        }
+
+        return result;
     }
 
     @Override
     public List<SecurityClearance> findAll() {
-        final String sql = "select security_clearance_id, name security_clearance_name " +
-                "from security_clearance; ";
-
+        final String sql = "select security_clearance_id, name security_clearance_name from security_clearance limit 1000;";
         return jdbcTemplate.query(sql, new SecurityClearanceMapper());
-
     }
 
     @Override
     public SecurityClearance add(SecurityClearance securityClearance) {
+
         final String sql = "insert into security_clearance (name) values (?);";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int rowsAffected = jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            statement.setInt(1, securityClearance.getSecurityClearanceId());
-            statement.setString(1, securityClearance.getName());
-            return statement;
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, securityClearance.getName());
+            return ps;
         }, keyHolder);
 
         if (rowsAffected <= 0) {
@@ -62,7 +69,6 @@ public class SecurityClearanceJdbcTemplateRepository implements SecurityClearanc
         }
 
         securityClearance.setSecurityClearanceId(keyHolder.getKey().intValue());
-
         return securityClearance;
     }
 
@@ -80,7 +86,24 @@ public class SecurityClearanceJdbcTemplateRepository implements SecurityClearanc
     @Override
     @Transactional
     public boolean deleteById(int securityClearanceId) {
-        final String sql = "delete from security_clearance where security_clearance_id = ?;";
-        return jdbcTemplate.update(sql, securityClearanceId) > 0;
+        return jdbcTemplate.update("delete from security_clearance where security_clearance_id = ? and " +
+                "security_clearance_id not in " +
+                "(Select security_clearance_id from agency_agent " +
+                "where security_clearance_id = ? " +
+                "group by security_clearance_id " +
+                "Having count(security_clearance_id) > 0);", securityClearanceId, securityClearanceId) > 0;
+    }
+
+    private void addAgencyAgent(SecurityClearance securityClearance) {
+        final String sql = "select aa.agency_id, aa.agent_id, aa.identifier, aa.activation_date, aa.is_active, "
+                + "sc.security_clearance_id, sc.name security_clearance_name, "
+                + "a.first_name, a.middle_name, a.last_name, a.dob, a.height_in_inches "
+                + "from agency_agent aa "
+                + "inner join agent a on aa.agent_id = a.agent_id "
+                + "inner join security_clearance sc on aa.security_clearance_id = sc.security_clearance_id "
+                + "where aa.security_clearance_id = ?";
+
+        var agencyAgents = jdbcTemplate.query(sql, new AgencyAgentMapper(),
+                securityClearance.getSecurityClearanceId());
     }
 }

@@ -15,13 +15,17 @@ public class AliasService {
         this.repository = repository;
     }
 
+    public void setKnownGoodState(){
+        repository.setKnownGoodState();
+    }
+
+    public List<Alias> Aliases(int agentId){
+        return repository.Aliases(agentId);
+    }
     public List<Alias> findAll() {
         return repository.findAll();
     }
 
-    public Alias findById(int aliasId) {
-        return repository.findById(aliasId);
-    }
 
     public Result<Alias> add(Alias alias) {
         Result<Alias> result = validate(alias);
@@ -65,7 +69,7 @@ public class AliasService {
     private Result<Alias> validate(Alias alias) {
         Result<Alias> result = new Result<>();
         if (alias == null) {
-            result.addMessage("alias cannot be null", ResultType.INVALID);
+            result.addMessage("Alias cannot be null", ResultType.INVALID);
             return result;
         }
 
@@ -73,14 +77,15 @@ public class AliasService {
             result.addMessage("Name is required", ResultType.INVALID);
         }
 
-        if (result.isSuccess()) {
-            List<Alias> existingAlias = repository.findAll();
-            for (Alias a : existingAlias) {
-                if (a.getAliasId() != alias.getAliasId() && a.getName().equalsIgnoreCase(alias.getName()))
-                    result.addMessage("alias name must be unique", ResultType.INVALID);
+        List<Alias> aliases = repository.findAll();
+        for (Alias a : aliases) {
+            if (a.getName().equalsIgnoreCase(alias.getName())) {
+                if (Validations.isNullOrBlank(alias.getPersona())) {
+                    result.addMessage("Duplicate names detected. Persona name is required", ResultType.INVALID);
+                    break;
+                }
             }
         }
-
         return result;
     }
 }
