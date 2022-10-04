@@ -50,7 +50,7 @@ public class SecurityClearanceService {
         }
 
         if (!repository.update(securityClearance)) {
-            String msg = String.format("securityClearanceId: %s, not found", securityClearance.getSecurityClearanceId());
+            String msg = String.format("securityClearanceId: %s, was not found", securityClearance.getSecurityClearanceId());
             result.addMessage(msg, ResultType.NOT_FOUND);
         }
 

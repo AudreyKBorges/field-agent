@@ -41,13 +41,13 @@ public class AliasService {
             return result;
         }
 
-        if (alias.getAgentId() <= 0) {
+        if (alias.getAliasId() <= 0) {
             result.addMessage("aliasId must be set for `update` operation", ResultType.INVALID);
             return result;
         }
 
         if (!repository.update(alias)) {
-            String msg = String.format("aliasId: %s, not found", alias.getAliasId());
+            String msg = String.format("aliasId: %s, was not found", alias.getAliasId());
             result.addMessage(msg, ResultType.NOT_FOUND);
         }
 

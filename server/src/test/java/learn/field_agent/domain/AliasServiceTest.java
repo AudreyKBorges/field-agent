@@ -5,6 +5,7 @@ import learn.field_agent.data.LocationRepository;
 import learn.field_agent.models.Agency;
 import learn.field_agent.models.Alias;
 import learn.field_agent.models.Location;
+import learn.field_agent.models.SecurityClearance;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,8 +38,9 @@ class AliasServiceTest {
 
     @Test
     void shouldAdd() {
-        Alias alias = new Alias(7, "Test", "Test", 7);
-        Alias mockOut = new Alias(8, "TEST", "Long Name Test", 8);
+        Alias alias = makeAlias();
+        Alias mockOut = makeAlias();
+        mockOut.setAliasId(7);
 
         when(repository.add(alias)).thenReturn(mockOut);
 
@@ -48,16 +50,16 @@ class AliasServiceTest {
     }
 
     @Test
-    void shouldNotUpdateWhenInvalid() {
-        Alias alias = makeAlias();
-        Result<Alias> actual = service.update(alias);
-        assertEquals(ResultType.INVALID, actual.getType());
+    void shouldNotUpdateNonExistentAlias() {
+        Alias alias = new Alias();
+        alias.setAliasId(999);
+        alias.setName("Audrey");
+        when(repository.update(alias)).thenReturn(false);
+        Result result = service.update(alias);
 
-        Alias alias1 = makeAlias();
-        alias.setAliasId(1);
-        alias.setName("");
-        actual = service.update(alias1);
-        assertEquals(ResultType.INVALID, actual.getType());
+        assertFalse(result.isSuccess());
+        assertEquals(1, result.getMessages().size());
+        assertEquals("aliasId: 999, was not found", result.getMessages().get(0));
     }
 
     @Test
@@ -81,7 +83,7 @@ class AliasServiceTest {
 
     Alias makeAlias() {
         Alias alias = new Alias();
-        alias.setAliasId(7);
+//        alias.setAliasId(7);
         alias.setName("Mrs. Smith");
         alias.setPersona("Special Agent");
         alias.setAgentId(7);

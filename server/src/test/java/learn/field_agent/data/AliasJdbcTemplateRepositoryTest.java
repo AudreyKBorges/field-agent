@@ -46,8 +46,9 @@ class AliasJdbcTemplateRepositoryTest {
     @Test
     void shouldUpdate() {
         Alias aliasOne = firstAlias();
-        assertTrue(repository.update(aliasOne));
         aliasOne.setAliasId(1);
+        assertTrue(repository.update(aliasOne));
+        aliasOne.setAliasId(999);
         assertFalse(repository.update(aliasOne));
     }
 

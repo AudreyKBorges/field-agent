@@ -42,12 +42,11 @@ class SecurityClearanceServiceTest {
     void shouldNotCreateNull() {
         SecurityClearance securityClearance = null;
 
-        Result result = service.add(securityClearance);
+        Result<SecurityClearance> result = service.add(securityClearance);
 
-        // Assert
         assertFalse(result.isSuccess());
         assertEquals(1, result.getMessages().size());
-        assertTrue(result.getMessages().contains("cannot be null"));
+        assertEquals("Security clearance cannot be null", result.getMessages().get(0));
     }
 
     @Test
@@ -59,13 +58,13 @@ class SecurityClearanceServiceTest {
 
         assertFalse(result.isSuccess());
         assertEquals(1, result.getMessages().size());
-        assertTrue(result.getMessages().contains("`name`"));
+        assertEquals("name is required", result.getMessages().get(0));
     }
 
     @Test
     void shouldNotAddWhenInvalid() {
         SecurityClearance securityClearance = new SecurityClearance();
-        securityClearance.setName("   ");
+        securityClearance.setName("");
 
         Result<SecurityClearance> actual = service.add(securityClearance);
         assertEquals(ResultType.INVALID, actual.getType());
@@ -91,13 +90,13 @@ class SecurityClearanceServiceTest {
     void shouldNotUpdateNonExistentSecurityClearance() {
         SecurityClearance securityClearance = new SecurityClearance();
         securityClearance.setSecurityClearanceId(1000);
-        securityClearance.setName("");
-
+        securityClearance.setName("Audrey");
+        when(repository.update(securityClearance)).thenReturn(false);
         Result result = service.update(securityClearance);
 
         assertFalse(result.isSuccess());
         assertEquals(1, result.getMessages().size());
-        assertTrue(result.getMessages().contains("was not found"));
+        assertEquals("securityClearanceId: 1000, was not found", result.getMessages().get(0));
     }
 
     @Test
@@ -121,7 +120,6 @@ class SecurityClearanceServiceTest {
 
     SecurityClearance makeSecurityClearance() {
         SecurityClearance securityClearance = new SecurityClearance();
-        securityClearance.setSecurityClearanceId(5);
         securityClearance.setName("Area51");
         return securityClearance;
     }

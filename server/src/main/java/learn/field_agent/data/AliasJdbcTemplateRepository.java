@@ -32,9 +32,9 @@ public class AliasJdbcTemplateRepository implements AliasRepository {
 
     @Override
     public List<Alias> findByName(String name) {
-        final String sql = "select alias_id, name alias_name, persona, agent_id "
+        final String sql = "select alias_id, `name`, persona, agent_id "
                 + "from alias "
-                + "where name alias_name = ?;";
+                + "where `name` = ?;";
 
         return jdbcTemplate.query(sql, mapper, name);
     }
@@ -64,16 +64,16 @@ public class AliasJdbcTemplateRepository implements AliasRepository {
     public boolean update(Alias alias) {
 
         final String sql = "update alias set "
-                + "alias_id = ?, "
                 + "name = ?, "
                 + "persona = ?, "
-                + "agent_id = ?;";
+                + "agent_id = ? "
+                + "where alias_id = ?;";
 
         return jdbcTemplate.update(sql,
-                alias.getAliasId(),
                 alias.getName(),
                 alias.getPersona(),
-                alias.getAgentId()) > 0;
+                alias.getAgentId(),
+                alias.getAliasId()) > 0;
     }
 
     @Override
