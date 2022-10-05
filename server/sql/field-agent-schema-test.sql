@@ -107,6 +107,10 @@ begin
 	alter table agency auto_increment = 1;
     delete from agent;
     alter table agent auto_increment = 1;
+    delete from alias;
+    alter table alias auto_increment = 1;
+    delete from security_clearance;
+    alter table security_clearance auto_increment = 1;
     
     insert into agency(agency_id, short_name, long_name) values
         (1, 'ACME', 'Agency to Classify & Monitor Evildoers'),
@@ -134,6 +138,12 @@ begin
 		('Ulises','B','Muhammad','2008-04-01',80),
 		('Phylys','Y','Howitt','1979-03-28',68);
         
+	insert into security_clearance(security_clearance_id, name) values
+    	(1, 'Secret'),
+		(2, 'Top Secret'),
+       	(3, 'Super Secret'),
+		(4, 'Extremely Secret');
+        
 	insert into agency_agent 
 		(agency_id, agent_id, identifier, security_clearance_id, activation_date)
     select
@@ -146,6 +156,14 @@ begin
     inner join agent
     where agent.agent_id not in (6, 8)
     and agency.agency_id != 2;
+
+    insert into alias(alias_id, name, persona, agent_id) values
+		(1, 'James Bond', 'Secret Agent', '1'),
+		(2, 'Agent X', 'Secret Agent', '2'),
+		(3, 'Jane Blonde', 'Secret Agent', '3'),
+		(4, 'Modesty Blaise', 'Secret Agent', '4'),
+		(5, 'Black Widow', 'Secret Agent', '5'),
+		(6, 'Agent 44', 'Secret Agent', '6');
 
 end //
 -- 4. Change the statement terminator back to the original.
