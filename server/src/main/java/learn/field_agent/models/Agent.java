@@ -13,10 +13,8 @@ public class Agent {
     private LocalDate dob;
     private int heightInInches;
     private List<AgentAgency> agencies = new ArrayList<>();
-
-
     private List<Alias> aliases = new ArrayList<>();
-
+    //Add list of alias so when we get an agent we get a list of alias.
     public int getAgentId() {
         return agentId;
     }
@@ -74,7 +72,7 @@ public class Agent {
     }
 
     public List<Alias> getAliases() {
-        return aliases;
+        return new ArrayList<>(aliases);
     }
 
     public void setAliases(List<Alias> aliases) {
