@@ -6,11 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class SecurityClearanceJdbcTemplateRepositoryTest {
-
+    private final int NEXT_ID = 5;
     @Autowired
     SecurityClearanceJdbcTemplateRepository repository;
 
@@ -24,16 +26,44 @@ class SecurityClearanceJdbcTemplateRepositoryTest {
 
     @Test
     void shouldFindById() {
-        SecurityClearance secret = new SecurityClearance(1, "Secret");
-        SecurityClearance topSecret = new SecurityClearance(2, "Top Secret");
+        SecurityClearance result = repository.findById(1);
+        assertNotNull(result);
+    }
 
-        SecurityClearance actual = repository.findById(1);
-        assertEquals(secret, actual);
+    @Test
+    void shouldFindAll() {
+        List<SecurityClearance> securityClearances = repository.findAll();
+        assertNotNull(securityClearances);
+        assertTrue(securityClearances.size() >= 1 && securityClearances.size() <= NEXT_ID);
+    }
 
-        actual = repository.findById(2);
-        assertEquals(topSecret, actual);
+    @Test
+    void shouldAdd() {
+        SecurityClearance securityClearance = makeSecurityClearance();
+        SecurityClearance actual = repository.add(securityClearance);
+        assertNotNull(actual);
+        assertEquals(NEXT_ID, actual.getSecurityClearanceId());
 
-        actual = repository.findById(3);
-        assertEquals(null, actual);
+    }
+
+    @Test
+    void shouldUpdate() {
+        SecurityClearance securityClearance = new SecurityClearance();
+        securityClearance.setSecurityClearanceId(2);
+        securityClearance.setName("Super Duper Secret");
+
+        assertTrue(repository.update(securityClearance));
+        assertEquals(securityClearance, repository.findById(2));
+    }
+
+    @Test
+    void shouldDelete() {
+        assertTrue(repository.deleteById(3));
+    }
+
+    private SecurityClearance makeSecurityClearance() {
+        SecurityClearance securityClearance = new SecurityClearance();
+        securityClearance.setName("Spooky");
+        return securityClearance;
     }
 }
