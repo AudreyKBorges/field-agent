@@ -59,7 +59,7 @@ public class Alias {
         return aliases;
     }
 
-    public void setAliases(List<Alias> alias) {
-        this.aliases = alias;
+    public void setAliases(List<Alias> aliases) {
+        this.aliases = aliases;
     }
 }
