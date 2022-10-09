@@ -5,11 +5,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-    <title>Field Agent</title>
-</head>
+    <link rel="stylesheet" href="/styles/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet"></head>
 <body>
     <div class="container">
-        <h1>Welcome To Field Agent Tracker</h1>
+        <h1>Field Agent Registrar</h1>
 
         <div id="form-container">
             <h2 id="form-heading">Add Field Agent</h2>
@@ -32,7 +41,7 @@
                     <input id="dob" name="dob" type="date" class="form-control" min="1900-01-01" max="getMaxDate()">
                 </div>
                 <div class="form-group">
-                    <label for="height">Height(in inches):</label>
+                    <label for="height">Height (in inches): </label>
                     <input id="height" name="height" type="number">
                 </div>
                 <button class="btn btn-primary" type="submit" id="form-submit-button">Add Agent</button>
@@ -46,11 +55,11 @@
             <table>
                 <thead>
                     <tr>
-                        <th>First Name</th>
-                        <th>Middle Name</th>
-                        <th>Last Name</th>
-                        <th>Date of Birth</th>
-                        <th>Height(in inches)</th>
+                        <th class="text-uppercase">First Name</th>
+                        <th class="text-uppercase">Middle Name</th>
+                        <th class="text-uppercase">Last Name</th>
+                        <th class="text-uppercase">Date of Birth</th>
+                        <th class="text-uppercase">Height (in inches)</th>
                         <th>&nbsp;</th>
                     </tr>
                 </thead>
