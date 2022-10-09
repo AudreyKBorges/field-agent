@@ -44,11 +44,11 @@ function renderList(fieldAgents){
                     <td >${fa.firstName}</td>
                     <td>${fa.middleName}</td>
                     <td>${fa.lastName}</td>
-                    <td>${fa.dateOfBirth}</td>
+                    <td>${fa.dob}</td>
                     <td>${fa.heightInInches}</td>
                     <td class="btn-column">
-                        <button class="btn btn-info" onclick="handleEditAgent(${fa.id})">Edit</button>
-                        <button class="btn btn-danger" onclick="handleDeleteAgent(${fa.id})">Delete</button>
+                        <button class="btn btn-info" onclick="handleEditAgent(${fa.agentId})">Edit</button>
+                        <button class="btn btn-danger" onclick="handleDeleteAgent(${fa.agentId})">Delete</button>
                     </td>
                 </tr>
                 `;
@@ -64,17 +64,17 @@ function handleSubmit(event){
     const firstName = document.getElementById('first-name').value; 
     const middleName = document.getElementById('middle-name').value;
     const lastName = document.getElementById('last-name').value;
-    const d = new Date();
-    let day = d.getDate();
-    const dateOfBirth = document.getElementById('dob').date;
+    const dob = document.getElementById('dob').value;
     const heightInInches = document.getElementById('height').value;
 
     const fieldAgent = {
         firstName,
         middleName,
         lastName,
-        dateOfBirth: dateOfBirth ? date(dateOfBirth) : "",
+        dob,
         heightInInches: heightInInches ? parseInt(heightInInches) : 0, 
+        agencies: [],
+        alias: []
     };
 
     if(editFieldAgentId > 0){
@@ -90,12 +90,12 @@ function handleAddAgent(){
 
 // update 
 function handleEditAgent(fieldAgentId){
-    const fieldAgent = fieldAgents.find(fieldAgent => fieldAgent.id === fieldAgentId);
+    const fieldAgent = fieldAgents.find(fieldAgent => fieldAgent.agentId === fieldAgentId);
 
     document.getElementById('first-name').value = fieldAgent.firstName;
     document.getElementById('middle-name').value = fieldAgent.middleName;
     document.getElementById('last-name').value = fieldAgent.lastName;
-    document.getElementById('dob').date = fieldAgent.dateOfBirth;
+    document.getElementById('dob').value = fieldAgent.dob;
     document.getElementById('height').value = fieldAgent.heightInInches;
 
     document.getElementById('form-heading').innerText = "Update Field Agent";
@@ -108,7 +108,7 @@ function handleEditAgent(fieldAgentId){
 
 // delete
 function handleDeleteAgent(fieldAgentId){
-    const fieldAgent = fieldAgents.find(fieldAgent => fieldAgent.id === fieldAgentId);
+    const fieldAgent = fieldAgents.find(fieldAgent => fieldAgent.agentId === fieldAgentId);
     if(confirm(`Delete agent ${fieldAgent.firstName} ${fieldAgent.middleName} ${fieldAgent.lastName}?`)){
         const init = {
             method: 'DELETE'
@@ -124,6 +124,7 @@ function handleDeleteAgent(fieldAgentId){
             }
         })
         .catch(console.log);
+        console.log(fieldAgent);
     }
 }
 
@@ -160,7 +161,7 @@ function doPost(fieldAgent){
         }
     })
     .then(data =>{
-        if(data.id){
+        if(data.agentId){
             displayList();
             resetState();
         }else{
@@ -168,10 +169,11 @@ function doPost(fieldAgent){
         }
     })
     .catch(error => console.log(error))
+    console.log(fieldAgent);
 }
 
 function doPut(fieldAgent){
-    fieldAgent.id = editFieldAgentId;
+    fieldAgent.agentId = editFieldAgentId;
 
     const init = {
         method: 'PUT',
@@ -200,6 +202,7 @@ function doPut(fieldAgent){
         }
     })
     .catch(console.log);
+    console.log(fieldAgent);
 }
 
 function resetState(){
