@@ -26,7 +26,11 @@ h1 {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     -webkit-text-stroke-width: .5px;
-    -webkit-text-stroke-color:#212529;
+    -webkit-text-stroke-color: #212529;
+    -moz-background-clip: text;
+    -moz-text-fill-color: transparent;
+    -moz-text-stroke-width: .5px;
+    -moz-text-stroke-color: #212529;
     padding: 1em;
     letter-spacing: 2.5px;
     font-family: 'Bungee', cursive;
