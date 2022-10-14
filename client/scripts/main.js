@@ -13,6 +13,7 @@ function displayList(){
 
 function getMaxDate() {
     const eighteenYearsAgo = eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
+    return eighteenYearsAgo;
 }
 
 
@@ -72,9 +73,7 @@ function handleSubmit(event){
         middleName,
         lastName,
         dob,
-        heightInInches: heightInInches ? parseInt(heightInInches) : 0, 
-        agencies: [],
-        alias: []
+        heightInInches: heightInInches ? parseInt(heightInInches) : 0
     };
 
     if(editFieldAgentId > 0){
@@ -202,7 +201,6 @@ function doPut(fieldAgent){
         }
     })
     .catch(console.log);
-    console.log(fieldAgent);
 }
 
 function resetState(){
