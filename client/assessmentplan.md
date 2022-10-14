@@ -33,13 +33,13 @@ _TODO_ Add time estimates to each of the top-level tasks
 
 ### Part 2: Add Agent and Delete Agent
 
-* [ ] Create a form to add an agent
-  * [ ] Add form JSX
-  * [ ] Decide between using individual state variables for input elements or a single object
-  * [ ] Add onChange event handlers to input elements
-  * [ ] Add onSubmit event handler to form element (be sure to prevent the form from submitting!)
-  * [ ] Create agent object
-  * [ ] Use `fetch` to `POST` the new agent's information to the Field Agent API
+* [x] Create a form to add an agent
+  * [x] Add form JSX
+  * [x] Decide between using individual state variables for input elements or a single object
+  * [x] Add onChange event handlers to input elements
+  * [x] Add onSubmit event handler to form element (be sure to prevent the form from submitting!)
+  * [x] Create agent object
+  * [x] Use `fetch` to `POST` the new agent's information to the Field Agent API
   * [ ] On success, update the agents array (don't modify the original array!), or on failure, display any validation errors from the API in the UI
 
 * [ ] Support deleting agents

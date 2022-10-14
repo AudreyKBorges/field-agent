@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import Navigation from "./Navigation";
 
 function Agents() {
-  const endpoint = "http://localhost:8080/api/agent/";
+  const endpoint = "http://localhost:8080/api/agents";
   const [fieldAgents, setFieldAgents] = useState([]);
 
   useEffect(() => {
@@ -25,7 +27,7 @@ function Agents() {
 
   const handleDeleteAgent = (agentId) => {
     const fieldAgent = fieldAgents.find(
-      (fieldAgent) => fieldAgent.id === agentId
+      (fieldAgent) => fieldAgent.agentId === agentId
     );
 
     if (
@@ -51,8 +53,11 @@ function Agents() {
 
   return (
     <>
+    <Navigation />
       <h2>Field Agents</h2>
-
+      <Link className="btn btn-primary" to="/agents/add">
+        Add Agent
+      </Link>
       <table>
         <thead>
           <tr>
@@ -70,10 +75,20 @@ function Agents() {
               <td>{fieldAgent.firstName}</td>
               <td>{fieldAgent.middleName}</td>
               <td>{fieldAgent.lastName}</td>
-              <td>{fieldAgent.dob}</td>
-              <td>{fieldAgent.height}</td>
+              <td>{fieldAgent.dob || "unavailable"}</td>
+              <td>{fieldAgent.heightInInches}</td>
               <td className="buttonContainer">
-                <button>
+                <Link
+                  className="btn btn-primary"
+                  to={`/agents/add/${fieldAgent.agentId}`}
+                >
+                  Edit
+                </Link>
+                <button
+                  className="btn btn-danger"
+                  onClick={() => handleDeleteAgent(fieldAgent.agentId)}
+                >
+                  Delete
                 </button>
               </td>
             </tr>
