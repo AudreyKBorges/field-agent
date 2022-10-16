@@ -80,7 +80,7 @@ function Agents() {
               <td className="buttonContainer">
                 <Link
                   className="btn btn-primary"
-                  to={`/agents/add/${fieldAgent.agentId}`}
+                  to={`/agents/edit/${fieldAgent.agentId}`}
                 >
                   Edit
                 </Link>
