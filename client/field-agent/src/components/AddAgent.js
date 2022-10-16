@@ -15,16 +15,16 @@ function AddAgent() {
   const [editFieldAgentId, setEditFieldAgentId] = useState(0);
   const [errors, setErrors] = useState([]);
   const history = useHistory();
-  const { id } = useParams();
+  const { agentId } = useParams();
 
   useEffect(() => {
-    if (id) {
-      setEditFieldAgentId(id);
-      fetch(`${endpoint}/${id}`)
-        .then((res) => res.json())
+    if (agentId) {
+      setEditFieldAgentId(agentId);
+      fetch(`${endpoint}/${agentId}`)
+        .then((response) => response.json())
         .then((data) => setFieldAgent(data));
     }
-  }, [id]);
+  }, [agentId]);
 
   const handleChange = (event) => {
     const newFieldAgent = { ...fieldAgent };
@@ -38,42 +38,7 @@ function AddAgent() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (editFieldAgentId === 0) {
-      addFieldAgent();
-    } else {
-      updateFieldAgent();
-    }
-  };
-
-  const updateFieldAgent = () => {
-    fieldAgent.agentId = editFieldAgentId;
-    const init = {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(fieldAgent),
-    };
-
-    fetch(`${endpoint}/${editFieldAgentId}`, init)
-      .then((response) => {
-        if (response.status === 204) {
-          return null;
-        } else if (response.status === 400) {
-          return response.json();
-        } else {
-          return Promise.reject(`Unexpected status code: ${response.status}`);
-        }
-      })
-      .then((data) => {
-        if (!data) {
-          resetState();
-          history.push("/");
-        } else {
-          setErrors(data);
-        }
-      })
-      .catch(console.log);
+    addFieldAgent();
   };
 
   const addFieldAgent = () => {
@@ -111,7 +76,7 @@ function AddAgent() {
 
   return (
     <>
-      <h2>{editFieldAgentId > 0 ? "Update Field Agent" : "Add Field Agent"}</h2>
+      <h2>Add Field Agent</h2>
 
       {errors.length > 0 && (
         <div>
@@ -187,7 +152,7 @@ function AddAgent() {
         </div>
         <div className="mt-4">
           <button className="btn btn-success mr-4" type="submit">
-            {editFieldAgentId > 0 ? "Update Field Agent" : "Add Field Agent"}
+          Add Field Agent
           </button>
           <Link className="btn btn-warning" to="/">
             Cancel

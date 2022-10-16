@@ -40,31 +40,31 @@ _TODO_ Add time estimates to each of the top-level tasks
   * [x] Add onSubmit event handler to form element (be sure to prevent the form from submitting!)
   * [x] Create agent object
   * [x] Use `fetch` to `POST` the new agent's information to the Field Agent API
-  * [ ] On success, update the agents array (don't modify the original array!), or on failure, display any validation errors from the API in the UI
+  * [x] On success, update the agents array (don't modify the original array!), or on failure, display any validation errors from the API in the UI
 
-* [ ] Support deleting agents
-  * [ ] Confirm the deletion with the user
-  * [ ] Use `fetch` to `DELETE` the agent from the Field Agent API
+* [x] Support deleting agents
+  * [x] Confirm the deletion with the user
+  * [x] Use `fetch` to `DELETE` the agent from the Field Agent API
   * [ ] On success, update the agents array (don't modify the original array!)
 
-* [ ] Conditionally render sections of the component
-  * [ ] Add state variable to track the current view
-  * [ ] Add conditional logic to the JSX to display the appropriate view
+* [x] Conditionally render sections of the component
+  * [x] Add state variable to track the current view
+  * [x] Add conditional logic to the JSX to display the appropriate view
 
 **Commit all changes and push to GitHub**
 
 ### Part 3: Edit Agent
 
-* [ ] Support editing agents
-  * [ ] Store the "edit agent ID" in a new state variable
-  * [ ] Retrieve the agent to edit
-  * [ ] Update form state variable(s)
-  * [ ] Add form JSX
-  * [ ] Add onChange event handlers to input elements
-  * [ ] Add onSubmit event handler to form element (be sure to prevent the form from submitting!)
-  * [ ] Create agent object
-  * [ ] Use `fetch` to `PUT` the updated agent's information to the Field Agent API
-  * [ ] On success, update the agents array (don't modify the original array!), or on failure, display any validation errors from the API in the UI
+* [x] Support editing agents
+  * [x] Store the "edit agent ID" in a new state variable
+  * [x] Retrieve the agent to edit
+  * [x] Update form state variable(s)
+  * [x] Add form JSX
+  * [x] Add onChange event handlers to input elements
+  * [x] Add onSubmit event handler to form element (be sure to prevent the form from submitting!)
+  * [x] Create agent object
+  * [x] Use `fetch` to `PUT` the updated agent's information to the Field Agent API
+  * [x] On success, update the agents array (don't modify the original array!), or on failure, display any validation errors from the API in the UI
 
 * [ ] Apply Bootstrap styling (as needed)
   * [ ] Update the agents list
@@ -76,28 +76,28 @@ _TODO_ Add time estimates to each of the top-level tasks
 
 ### Part 4: Client-Side Routes
 
-* [ ] Implement the required client-side routes (#.# hours)
-  * [ ] Install `react-router-dom`
-  * [ ] Define the necessary client-side routes (see the list of routes below)
-  * [ ] Stub out any components that are needed to support the client-side routes
+* [x] Implement the required client-side routes (#.# hours)
+  * [x] Install `react-router-dom`
+  * [x] Define the necessary client-side routes (see the list of routes below)
+  * [x] Stub out any components that are needed to support the client-side routes
     * _Note: Stub out the individual Agents CRUD UI components but hold off on moving any code from last week's monolithic Agents CRUD UI component to the individual components_
   * [ ] Display a "Not Found" message if a route doesn't match one of the defined routes
 
 ### Part 5: Agents CRUD UI Component Refactoring
 
-* [ ] Update the "Agents" list component (#.# hours)
-  * [ ] Update the "Add Agent" button to redirect the user to the "Add Agent" route (if not already completed)
-  * [ ] Update the individual agent "Edit" buttons to redirect the user to the appropriate route (if not already implemented)
+* [x] Update the "Agents" list component (#.# hours)
+  * [x] Update the "Add Agent" button to redirect the user to the "Add Agent" route (if not already completed)
+  * [x] Update the individual agent "Edit" buttons to redirect the user to the appropriate route (if not already implemented)
 
-* [ ] Update the "Add Agent" form component (#.# hours)
-  * [ ] Move code from the "Agents" list component into the "Add Agent" form component
-  * [ ] After a successful `POST` to the Field Agent API, redirect the user to the "Agents" route
+* [x] Update the "Add Agent" form component (#.# hours)
+  * [x] Move code from the "Agents" list component into the "Add Agent" form component
+  * [x] After a successful `POST` to the Field Agent API, redirect the user to the "Agents" route
 
-* [ ] Update the "Edit Agent" form component (#.# hours)
-  * [ ] Move code from the "Agents" list component into the "Edit Agent" form component
-  * [ ] Use the `useParams` hook to get the agent's ID from the route
-  * [ ] Use `fetch` to `GET` the agent from the Field Agent API when the component is first loaded
-  * [ ] After a successful `PUT` to the Field Agent API, redirect the user to the "Agents" route
+* [x] Update the "Edit Agent" form component (#.# hours)
+  * [x] Move code from the "Agents" list component into the "Edit Agent" form component
+  * [x] Use the `useParams` hook to get the agent's ID from the route
+  * [x] Use `fetch` to `GET` the agent from the Field Agent API when the component is first loaded
+  * [x] After a successful `PUT` to the Field Agent API, redirect the user to the "Agents" route
 
 _Note: A single form component can be used for both "Add Agent" and "Edit Agent"._
 

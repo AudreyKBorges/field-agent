@@ -19,9 +19,9 @@ function App() {
         <Route path="/agents/add">
           <AddAgent />
         </Route>
-        {/* <Route path="/agents/edit/:agentId">
+        <Route path="/agents/edit/:agentId">
           <EditAgent />
-        </Route> */}
+        </Route>
         {/* <Route path="*">
           <NotFound />
         </Route> */}
