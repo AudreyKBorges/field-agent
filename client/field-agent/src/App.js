@@ -22,9 +22,9 @@ function App() {
         <Route path="/agents/edit/:agentId">
           <EditAgent />
         </Route>
-        {/* <Route path="*">
+        <Route path="*">
           <NotFound />
-        </Route> */}
+        </Route>
       </Switch>
     </Router>
   );

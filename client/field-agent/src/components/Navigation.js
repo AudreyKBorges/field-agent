@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 function Navigation() {
   return (
-    <nav>
+    <nav className="navigation">
       <h1>Agent Registry</h1>
       <ul>
         <li>

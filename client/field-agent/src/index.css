@@ -1,13 +1,132 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Universal Styles */
+
+html {
+  font-size: 62.5%;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  font-size: 1.8rem;
+  font-family: 'Lato', sans-serif;
+  border: 0;
+  margin: 0, auto;
+  padding-bottom: 3em;
+}
+
+/* Navigation */
+
+ul {
+  display: flex;
+  justify-content: space-evenly;
+  list-style-type: none;
+  padding: 1em;
+  font-size: 2.5rem;
+}
+
+.navigation {
+  background-color: #343a41;
+  padding-bottom: 1em;
+}
+
+/* Headings */
+
+h1 {
+  font-size: 5rem;
+  text-align: center;
+  margin: 2% 0;
+  background: -webkit-linear-gradient(right, #dc3545, #007bff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke-width: .5px;
+  -webkit-text-stroke-color: #fff;
+  -moz-background-clip: text;
+  -moz-text-fill-color: transparent;
+  -moz-text-stroke-width: .5px;
+  -moz-text-stroke-color: #fff;
+  padding: 1em;
+  letter-spacing: 2.5px;
+  font-family: 'Bungee', cursive;
+}
+
+h1:after {
+  content: "";
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  border-bottom: 0.1em solid #fff;
+  padding-top: .5em;
+}
+
+h2 {
+  font-size: 3rem;
+  font-weight: bold;
+  margin: 2% 0;
+}
+
+.homeH2 {
+  text-align: center;
+  padding-bottom: 3rem;
+  color: #fff;
+}
+
+.notFound {
+  text-align: center;
+  padding-bottom: 1rem;
+}
+
+/* Form */
+
+form {
+  padding-bottom: 20%;
+}
+
+input, select, button, .btn-primary, .btn-warning {
+  font-size: 1.8rem !important;
+}
+
+.btn-primary, .btn-danger {
+  margin: .5rem;
+}
+
+/* Table */
+
+table {
+  width: 100%;
+  margin-top: 2%;
+  border-radius: 3px;
+  box-shadow: 0 4px 8px 0 #d9d9d9, 0 6px 20px 0 #d9d9d9;
+}
+
+td, th {
+  margin: 2% 0;
+  padding-left: 3rem;
+  padding-bottom: 3rem;
+}
+
+th {
+  padding-top: 3rem;
+}
+
+.btn-column {
+  text-align: center;
+  display: flex;
+  justify-content: space-evenly;
+  padding-right: 3rem;
+}
+
+.text-uppercase:after {
+  content: "";
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  border-bottom: 0.1em solid #212529;
+  padding-top: 1em;
+}
+
+img {
+  width: 500px;
+  height: 800px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 5px;
 }
