@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:3000"})
-@RequestMapping("/api/agent")
+@RequestMapping("/api/agents")
 public class AgentController {
 
     private final AgentService service;
